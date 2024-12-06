@@ -36,39 +36,26 @@ def calculate(line_of_rules: list[str], line_of_pages: list[str]):
     return total_sum, total_corrected_sum
 
 
-def read_example():
+def read_file(name: str):
     line_of_rules: list[str] = []
     line_of_pages: list[str] = []
-    with open("example.txt", "r") as file:
+    with open(name, "r") as file:
         for line in file.readlines():
             if "|" in line:
                 line_of_rules.append(line.strip())
             if "," in line:
                 line_of_pages.append(line.strip())
     return line_of_rules, line_of_pages
-
-
-def read_input():
-    line_of_rules: list[str] = []
-    line_of_pages: list[str] = []
-    with open("input.txt", "r") as file:
-        for line in file.readlines():
-            if "|" in line:
-                line_of_rules.append(line.strip())
-            if "," in line:
-                line_of_pages.append(line.strip())
-    return line_of_rules, line_of_pages
-
 
 if __name__ == "__main__":
     print("Day 5")
     print("Part 1")
-    line_of_rules, line_of_pages = read_example()
+    line_of_rules, line_of_pages = read_file("example.txt")
     sum_correct, sum_corrected = calculate(line_of_rules, line_of_pages)
     print(f"  Total sum of correct updates: {sum_correct}")
     print(f"  Total sum of corrected updates: {sum_corrected}")
     print("Part 2")
-    line_of_rules, line_of_pages = read_input()
+    line_of_rules, line_of_pages = read_file("input.txt")
     sum_correct, sum_corrected = calculate(line_of_rules, line_of_pages)
     print(f"  Total sum of correct updates: {sum_correct}")
     print(f"  Total sum of corrected updates: {sum_corrected}")
