@@ -1,60 +1,39 @@
 def solve(input: list[str]):
-    pos = (-1, -1)
-    visited = []
     directions = ["^", ">", "v", "<"]
-    direction_index = 0
 
-    for line in range(len(input)):
-        print(line)
-        if "^" in input[line]:
-            print(f"found ^ at X: {input[line].index('^')} Y: {line}")
-            pos = (input[line].index("^"), line)
-            break
+    def find_start(input):
+        for line_index, line in enumerate(input):
+            if "^" in line:
+                start_pos = (line.index("^"), line_index)
+                print(f"Found ^ at X: {start_pos[0]} Y: {start_pos[1]}")
+                return start_pos
+        raise ValueError("No starting position (^) found in input")
 
-    visited.append(pos)
+    def move(pos, direction_index, visited):
+        deltas = {"^": (0, -1), ">": (1, 0), "v": (0, 1), "<": (-1, 0)}
+        direction = directions[direction_index]
+        new_pos = (pos[0] + deltas[direction][0], pos[1] + deltas[direction][1])
 
-    def move():
-        nonlocal pos, direction_index
-        new_pos = None
+        if 0 <= new_pos[1] < len(input) and 0 <= new_pos[0] < len(input[0]):
+            cell = input[new_pos[1]][new_pos[0]]
+            print(f"Moving to {cell} at position {new_pos} ({direction})")
 
-        if directions[direction_index] == "^":
-            new_pos = (pos[0], pos[1] - 1)  # UP
-        elif directions[direction_index] == ">":
-            new_pos = (pos[0] + 1, pos[1])  # RIGHT
-        elif directions[direction_index] == "v":
-            new_pos = (pos[0], pos[1] + 1)  # DOWN
-        elif directions[direction_index] == "<":
-            new_pos = (pos[0] - 1, pos[1])  # LEFT
-
-        # Check if new_pos is valid
-        if new_pos is not None:
-            # Check if the new position is within the grid
-            if 0 <= new_pos[0] < len(input) and 0 <= new_pos[1] < len(input[0]):
-                line = input[new_pos[1]]
-                new_cell = line[new_pos[0]]
-                print(
-                    f"Moving to {new_cell} at position {new_pos} ({directions[direction_index]})"
-                )
-
-                if new_cell != "#":
-                    visited.append(new_pos)
-                    pos = new_pos
-                    return False
-                else:
-                    print("Collision! Turning 90 degrees right.")
-                    direction_index = (direction_index + 1) % 4
-                    return False
+            if cell != "#":
+                return new_pos, direction_index, visited + [new_pos], False
             else:
-                print("Out of grid!")
-                return True
+                print("Collision! Turning 90 degrees right.")
+                return pos, (direction_index + 1) % 4, visited, False
         else:
-            print("No valid direction!")
-            return True
+            print("Out of grid!")
+            return pos, direction_index, visited, True
 
-    print("Visiting next...")
+    pos = find_start(input)
+    visited = [pos]
+    direction_index = 0
     out_grid = False
+
     while not out_grid:
-        out_grid = move()
+        pos, direction_index, visited, out_grid = move(pos, direction_index, visited)
 
     print("Distinct visited positions:")
     print(len(set(visited)))
