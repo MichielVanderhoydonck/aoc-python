@@ -10,7 +10,7 @@ def solve(input: list[str]):
         numbers = list(map(int, number_string.split()))
 
         # all combinations of operators for the length of numbers -1, two numbers can only be operated on once...
-        ops_comb = product(["+", "*", "||"], repeat=len(numbers) - 1)
+        ops_comb = product(["+", "*", "||"], repeat=len(numbers) - 1) # part 2 is the added || append operator
 
         for ops in ops_comb:
             if eval(numbers, ops) == result:
@@ -41,6 +41,6 @@ def read_file(name: str):
 
 if __name__ == "__main__":
     print("Day 7")
-    print("Part 1")
+    print("Part 1 & 2")
     print(f'{solve(read_file("example.txt"))} calibrations')
     print(f'{solve(read_file("input.txt"))} calibrations')
